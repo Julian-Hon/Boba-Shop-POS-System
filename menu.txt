@@ -1,0 +1,74 @@
+FRESH BREW
+Classic Tea (Black) - 4.65
+Classic Tea (Green) - 4.65
+Classic Tea (Ooolong) - 4.65
+Honey Tea (Black) - 4.85
+Honey Tea (Green) - 4.85
+Honey Tea (Oolong) - 4.85
+
+MILKY
+Classic Pearl Milk Tea - 5.80
+Honey Pearl Milk Tea - 6.00
+Mango Green Milk Tea - 6.50
+Coffee Creama - 6.50
+Thai Pearl Milk Tea - 6.25
+Taro Pearl Milk Tea - 6.25
+
+FRUITY
+Honey Lemonade - 5.20
+Mango Green Tea - 5.80
+Mango & Passion Fruit Tea - 6.25
+
+ICE BLENDED
+Peach Tea Blended w/ Lychee Jelly - 6.95
+Thai Tea Blended w/ Pearl - 6.75
+Taro Blended w/ Pudding - 6.75
+Coffee Blended w/ Ice Cream - 6.75
+Mango Blended w/ Ice Cream - 6.75
+
+
+Classic Tea (Black) - 4.65
+Classic Tea (Green) - 4.65
+Classic Tea (Ooolong) - 4.65
+Honey Tea (Black) - 4.85
+Honey Tea (Green) - 4.85
+Honey Tea (Oolong) - 4.85
+Classic Pearl Milk Tea - 5.80
+Honey Pearl Milk Tea - 6.00
+Mango Green Milk Tea - 6.50
+Coffee Creama - 6.50
+Thai Pearl Milk Tea - 6.25
+Taro Pearl Milk Tea - 6.25
+Honey Lemonade - 5.20
+Mango Green Tea - 5.80
+Mango & Passion Fruit Tea - 6.25
+Peach Tea Blended w/ Lychee Jelly - 6.95
+Thai Tea Blended w/ Pearl - 6.75
+Taro Blended w/ Pudding - 6.75
+Coffee Blended w/ Ice Cream - 6.75
+Mango Blended w/ Ice Cream - 6.75
+
+
+INGREDIENTS:
+
+TEA
+Black
+Green
+Oolong
+Coffee
+
+BASE
+Blended Ice
+Creamer
+Lemonade
+
+TOPPING (.75 each)
+Tapioca pearl
+Lychee Jelly
+Coffee Jelly
+Thai powder
+Taro powder
+Honey
+Mango
+Passionfruit
+Ice cream

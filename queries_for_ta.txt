@@ -1,0 +1,494 @@
+Changes from Database Design Document
+* Got rid of payment entity
+* Added menu_inventory and inventory entities
+* Order_table, added month, day, week, hour, year, combined_date attributes
+* Deleted stock level from toppings, replaced with inventory_id (made it into a foreign key)
+
+
+1. weekly sales history (SPECIAL QUERY)
+SELECT 'week 1 has ' || COUNT(*)  || ' orders' 
+AS weekly_count
+FROM "order" 
+where week = 1 and month = 1;
+
+
+
+
+2. Realistic Sales History (SPECIAL QUERY)
+SELECT
+'12pm has ' || COUNT(*)  || ' orders totalling $' || SUM(total_price) 
+AS hourly_orders
+FROM "order"
+where hour = 12;
+
+
+
+
+3. Peak Sales Day (SPECIAL QUERY)
+SELECT
+'Aug 30 has $' || SUM(total_price) || ' of top sales'
+ AS top_sales
+FROM (
+    SELECT total_price AS total_price
+    FROM "order"
+    WHERE date = 30 AND month = 8
+    ORDER BY total_price DESC
+    LIMIT 10
+) AS temp;
+
+
+
+
+4. Ingredients used per menu item (SPECIAL QUERY)
+SELECT
+    beverage_info.name || ' uses ' || COUNT(menu_inventory.inventory_id) || ' items' AS inventory_usage
+FROM
+    beverage_info
+JOIN
+    menu_inventory ON beverage_info.beverage_info_id = menu_inventory.beverage_info_id
+WHERE
+    beverage_info.name = 'Classic Pearl Milk Tea'
+GROUP BY
+    beverage_info.name;
+
+
+5. Month with highest sales
+WITH SumsByMonthCTE AS (
+    SELECT 
+        month AS Month,
+        SUM(total_price) AS Sum
+    FROM
+        "order"
+    GROUP BY
+        month
+)
+SELECT
+    Month,
+    Sum
+FROM 
+    SumsByMonthCTE
+ORDER BY
+    Sum DESC
+LIMIT 1;
+
+
+
+
+6. Most sold drink in a given month
+WITH DrinkByMonthCTE AS (
+    SELECT
+        O.month AS Month,
+        B.beverage_name
+    FROM
+        "order" O
+    JOIN
+        beverage B ON O.order_id = B.order_id
+    WHERE
+        O.Month = 2
+
+
+)
+SELECT
+    Month,
+    Count(*) as total_orders,
+    beverage_name
+FROM
+    DrinkByMonthCTE
+GROUP BY
+    Month,
+    beverage_name
+ORDER BY
+    total_orders DESC
+LIMIT 1;
+
+
+
+
+7. Month with highest sales given a specific drink
+WITH SumsByDrinkCTE AS (
+    SELECT
+        O.month AS Month,
+        B.beverage_name
+    FROM
+        "order" O
+    JOIN
+        beverage B ON O.order_id = B.order_id
+    WHERE
+        B.beverage_name = 'Honey Pearl Milk Tea'
+)
+SELECT
+    Month,
+    Count(*) as total_orders,
+    beverage_name
+FROM
+    SumsByDrinkCTE
+GROUP BY
+    Month,
+    beverage_name
+ORDER BY
+    total_orders DESC
+LIMIT 1;
+
+
+
+
+8. Monthly Total Sales Per Month Query
+SELECT SUM(total_price) AS Monthly_Sales, month
+FROM "order"
+GROUP BY month
+Order BY month;
+
+
+
+
+
+
+9. Most Used Topping in a specific month
+SELECT "order".month, beverage_toppings.topping_name, COUNT(beverage_toppings.topping_name) AS topping_count
+FROM "order"
+INNER JOIN beverage ON "order".order_id = beverage.order_id
+INNER JOIN beverage_toppings ON beverage.beverage_id = beverage_toppings.beverage_id
+WHERE (beverage_toppings.action = 'add' OR beverage_toppings.action = 'sub') AND "order".month = 4
+GROUP BY beverage_toppings.topping_name, "order".month
+ORDER BY topping_count DESC
+LIMIT 1;
+
+
+
+
+
+
+
+
+10. Peak Sales Week
+SELECT week,
+       SUM(total_price) AS weekly_sales
+FROM "order"
+GROUP BY week
+ORDER BY weekly_sales DESC
+LIMIT 1;
+
+
+11. Most popular drink overall
+SELECT
+    B.beverage_name,
+    COUNT(*) AS drink_count
+FROM
+    "order" O
+JOIN
+    beverage B ON O.order_id = B.order_id
+GROUP BY
+    B.beverage_name
+ORDER BY
+    drink_count DESC
+LIMIT 1;
+
+
+
+
+12. Peak sales hour 
+SELECT
+    hour,
+    SUM(total_price) AS total_sales
+FROM "order"
+GROUP BY hour
+ORDER BY total_sales DESC
+LIMIT 1;
+
+
+
+
+13. Total Sales
+SELECT SUM(total_price)
+FROM “order”;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+14. Most used ingredient
+SELECT
+   inventory.name || ' is the most used ingredient, it is in ' || COUNT(menu_inventory.beverage_info_id) || ' menu items' AS ingredient_count
+FROM
+    inventory
+JOIN
+    menu_inventory ON inventory.inventory_id = menu_inventory.inventory_id
+GROUP BY
+    inventory.name
+ORDER BY
+    ingredient_count DESC
+LIMIT 1;
+
+
+
+
+
+
+15. Menu item with most ingredients
+SELECT
+    beverage_info.name || ' uses the most ingredients, it uses ' || COUNT(menu_inventory.inventory_id) || ' ingredients' AS ingredient_usage
+FROM
+    beverage_info
+JOIN
+    menu_inventory ON beverage_info.beverage_info_id = menu_inventory.beverage_info_id
+GROUP BY
+    beverage_info.name
+ORDER BY
+    COUNT(menu_inventory.inventory_id) DESC
+LIMIT 1;
+Changes from Database Design Document
+* Got rid of payment entity
+* Added menu_inventory and inventory entities
+* Order_table, added month, day, week, hour, year, combined_date attributes
+* Deleted stock level from toppings, replaced with inventory_id (made it into a foreign key)
+
+
+1. weekly sales history (SPECIAL QUERY)
+SELECT 'week 1 has ' || COUNT(*)  || ' orders' 
+AS weekly_count
+FROM "order" 
+where week = 1 and month = 1;
+
+
+
+
+2. Realistic Sales History (SPECIAL QUERY)
+SELECT
+'12pm has ' || COUNT(*)  || ' orders totalling $' || SUM(total_price) 
+AS hourly_orders
+FROM "order"
+where hour = 12;
+
+
+
+
+3. Peak Sales Day (SPECIAL QUERY)
+SELECT
+'Aug 30 has $' || SUM(total_price) || ' of top sales'
+ AS top_sales
+FROM (
+    SELECT total_price AS total_price
+    FROM "order"
+    WHERE date = 30 AND month = 8
+    ORDER BY total_price DESC
+    LIMIT 10
+) AS temp;
+
+
+
+
+4. Ingredients used per menu item (SPECIAL QUERY)
+SELECT
+    beverage_info.name || ' uses ' || COUNT(menu_inventory.inventory_id) || ' items' AS inventory_usage
+FROM
+    beverage_info
+JOIN
+    menu_inventory ON beverage_info.beverage_info_id = menu_inventory.beverage_info_id
+WHERE
+    beverage_info.name = 'Classic Pearl Milk Tea'
+GROUP BY
+    beverage_info.name;
+
+
+5. Month with highest sales
+WITH SumsByMonthCTE AS (
+    SELECT 
+        month AS Month,
+        SUM(total_price) AS Sum
+    FROM
+        "order"
+    GROUP BY
+        month
+)
+SELECT
+    Month,
+    Sum
+FROM 
+    SumsByMonthCTE
+ORDER BY
+    Sum DESC
+LIMIT 1;
+
+
+
+
+6. Most sold drink in a given month
+WITH DrinkByMonthCTE AS (
+    SELECT
+        O.month AS Month,
+        B.beverage_name
+    FROM
+        "order" O
+    JOIN
+        beverage B ON O.order_id = B.order_id
+    WHERE
+        O.Month = 2
+
+
+)
+SELECT
+    Month,
+    Count(*) as total_orders,
+    beverage_name
+FROM
+    DrinkByMonthCTE
+GROUP BY
+    Month,
+    beverage_name
+ORDER BY
+    total_orders DESC
+LIMIT 1;
+
+
+
+
+7. Month with highest sales given a specific drink
+WITH SumsByDrinkCTE AS (
+    SELECT
+        O.month AS Month,
+        B.beverage_name
+    FROM
+        "order" O
+    JOIN
+        beverage B ON O.order_id = B.order_id
+    WHERE
+        B.beverage_name = 'Honey Pearl Milk Tea'
+)
+SELECT
+    Month,
+    Count(*) as total_orders,
+    beverage_name
+FROM
+    SumsByDrinkCTE
+GROUP BY
+    Month,
+    beverage_name
+ORDER BY
+    total_orders DESC
+LIMIT 1;
+
+
+
+
+8. Monthly Total Sales Per Month Query
+SELECT SUM(total_price) AS Monthly_Sales, month
+FROM "order"
+GROUP BY month
+Order BY month;
+
+
+
+
+
+
+9. Most Used Topping in a specific month
+SELECT "order".month, beverage_toppings.topping_name, COUNT(beverage_toppings.topping_name) AS topping_count
+FROM "order"
+INNER JOIN beverage ON "order".order_id = beverage.order_id
+INNER JOIN beverage_toppings ON beverage.beverage_id = beverage_toppings.beverage_id
+WHERE (beverage_toppings.action = 'add' OR beverage_toppings.action = 'sub') AND "order".month = 4
+GROUP BY beverage_toppings.topping_name, "order".month
+ORDER BY topping_count DESC
+LIMIT 1;
+
+
+
+
+
+
+
+
+10. Peak Sales Week
+SELECT week,
+       SUM(total_price) AS weekly_sales
+FROM "order"
+GROUP BY week
+ORDER BY weekly_sales DESC
+LIMIT 1;
+
+
+11. Most popular drink overall
+SELECT
+    B.beverage_name,
+    COUNT(*) AS drink_count
+FROM
+    "order" O
+JOIN
+    beverage B ON O.order_id = B.order_id
+GROUP BY
+    B.beverage_name
+ORDER BY
+    drink_count DESC
+LIMIT 1;
+
+
+
+
+12. Peak sales hour 
+SELECT
+    hour,
+    SUM(total_price) AS total_sales
+FROM "order"
+GROUP BY hour
+ORDER BY total_sales DESC
+LIMIT 1;
+
+
+
+
+13. Total Sales
+SELECT SUM(total_price)
+FROM “order”;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+14. Most used ingredient
+SELECT
+   inventory.name || ' is the most used ingredient, it is in ' || COUNT(menu_inventory.beverage_info_id) || ' menu items' AS ingredient_count
+FROM
+    inventory
+JOIN
+    menu_inventory ON inventory.inventory_id = menu_inventory.inventory_id
+GROUP BY
+    inventory.name
+ORDER BY
+    ingredient_count DESC
+LIMIT 1;
+
+
+
+
+
+
+15. Menu item with most ingredients
+SELECT
+    beverage_info.name || ' uses the most ingredients, it uses ' || COUNT(menu_inventory.inventory_id) || ' ingredients' AS ingredient_usage
+FROM
+    beverage_info
+JOIN
+    menu_inventory ON beverage_info.beverage_info_id = menu_inventory.beverage_info_id
+GROUP BY
+    beverage_info.name
+ORDER BY
+    COUNT(menu_inventory.inventory_id) DESC
+LIMIT 1;
